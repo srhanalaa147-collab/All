@@ -1,0 +1,11 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>فحص التثبيت</title>
+<style>body{font-family:system-ui,sans-serif;background:#171233;color:#fff;margin:0;padding:20px}h1{font-size:20px}.r{display:flex;justify-content:space-between;gap:10px;padding:12px 14px;margin:8px 0;border-radius:14px;background:#251f4d;font-size:14px;word-break:break-all}.ok{color:#5effc4}.no{color:#ff8a8a}</style></head><body>
+<h1>فحص ملفات التثبيت</h1><div id="o"></div>
+<script>
+var files=['index.html','manifest.webmanifest','sw.js','storage.js','icon-192.png','icon-512.png','maskable-192.png','maskable-512.png'],o=document.getElementById('o');
+function row(t,ok,x){var d=document.createElement('div');d.className='r';d.innerHTML='<span>'+t+'</span><b class="'+(ok?'ok':'no')+'">'+(ok?'✓ ':'✗ ')+(x||'')+'</b>';o.appendChild(d)}
+row('الرابط آمن (HTTPS)',location.protocol==='https:',location.protocol);
+files.forEach(function(f){fetch(f,{cache:'no-store'}).then(function(r){row(f,r.ok,r.status)}).catch(function(){row(f,false,'غير موجود')})});
+if('serviceWorker'in navigator)navigator.serviceWorker.getRegistration('./').then(function(g){row('خدمة التخزين (Service Worker) مسجلة',!!g,g&&g.active?'نشطة':'')});else row('Service Worker',false,'غير مدعوم');
+fetch('manifest.webmanifest',{cache:'no-store'}).then(function(r){return r.json()}).then(function(m){row('manifest صالح',!!(m.name&&m.icons&&m.start_url&&m.display),m.display)}).catch(function(){row('manifest صالح',false,'خطأ')});
+</script></body></html>
